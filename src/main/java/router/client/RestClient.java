@@ -30,9 +30,9 @@ public class RestClient {
     public static List<User> getUser(){
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
-        WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8080/").build());
+        WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8090/").build());
 
-        var k2=service.path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).get(new GenericType<List<User>>(){});
-        return k2;
+        List<User> o = (List<User>)service.path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).get(new GenericType<>() {});
+        return o;
     }
 }
