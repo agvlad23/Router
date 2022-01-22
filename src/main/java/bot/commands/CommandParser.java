@@ -51,6 +51,8 @@ public class CommandParser {
                 return new StopCommand();
             case "help":
                 return new HelpCommand();
+            case "list":
+                return new UserListCommand();
             default: return new HelpCommand();
         }
     }

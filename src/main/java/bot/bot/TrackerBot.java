@@ -7,11 +7,15 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.Update;
 import bot.roles.Role;
 import bot.services.SendUserMessageImpl;
+import router.client.Client;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
+
+import static org.glassfish.grizzly.http.util.Header.Date;
 
 public class TrackerBot extends TelegramLongPollingBot {
     protected String botName ;
@@ -51,7 +55,7 @@ public class TrackerBot extends TelegramLongPollingBot {
 
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
-            var role= Role.User;
+            var role= Client.getRole(update.getMessage().getChat().getUserName());
             var person=new Person(role,update);
 
             if (messageText.startsWith(botPrefix)){
@@ -85,8 +89,10 @@ public class TrackerBot extends TelegramLongPollingBot {
                 new_message.setMessageId(Integer.parseInt(message_id));
                 String answer = "Registered task: "+ update.getCallbackQuery().getMessage().getText();
                 new_message.setText(answer);
+                System.out.println(new Date(update.getCallbackQuery().getMessage().getDate()*1000L));
 
                 SendUserMessageImpl.sendMessage(new_message);
+
 
             }
         }

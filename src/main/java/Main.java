@@ -1,7 +1,9 @@
 import bot.bot.TrackerBot;
+import bot.model.User;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import router.client.RestClient;
 import router.services.NotificationServiceImpl;
 import router.services.ReportServiceImpl;
 
@@ -12,7 +14,11 @@ public class Main {
     private static final Logger LOGGER = Logger.getGlobal();
 
     public static void main(String[] args) throws InterruptedException {
-       Thread t= new Thread(){
+
+        var user=new User();
+        var k=RestClient.getUser();
+        RestClient.addUser(user);
+    /*   Thread t= new Thread(){
             public void run(){
         try {
             Thread.sleep(2222);
@@ -30,7 +36,7 @@ public class Main {
                 new NotificationServiceImpl());
 
         Endpoint.publish("http://localhost:8090/teamservice/report/",
-                new ReportServiceImpl());
+                new ReportServiceImpl());*/
 
     }
 }

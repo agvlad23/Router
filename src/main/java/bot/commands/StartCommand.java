@@ -31,6 +31,7 @@ public class StartCommand implements Command{
         outMessage.setReplyMarkup(markupInline);
         outMessage.setText("<b><i> "+inMessage.getText().substring(inMessage.getText().indexOf(' '))+" </i></b>");
 
+
         SendUserMessageImpl.sendMessage(outMessage);
     }
 }
