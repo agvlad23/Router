@@ -17,6 +17,7 @@ public class HelpCommand implements Command{
         System.out.println("helpCommand");
 
 
+
         var inMessage=update.getMessage();
 
         SendMessage outMessage=new SendMessage(inMessage.getChatId().toString(),inMessage.getText()+" helpCommand");

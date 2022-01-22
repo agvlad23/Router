@@ -46,7 +46,9 @@
                 <version>2.3.2</version>
                 <configuration>
                     <wsdlUrls>
-                      <!--  <wsdlUrl>http://localhost:8090/teamservice/user/?wsdl</wsdlUrl> -->
+                      <!--  <wsdlUrl>http://localhost:8090/teamservice/user/?wsdl</wsdlUrl>
+
+                      -->
                     </wsdlUrls>
                     <keep>true</keep>
                     <packageName>router.client.generated</packageName>

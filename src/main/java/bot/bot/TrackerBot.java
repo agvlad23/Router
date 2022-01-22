@@ -53,6 +53,7 @@ public class TrackerBot extends TelegramLongPollingBot {
             Long chatId = update.getMessage().getChatId();
             var role= Role.User;
             var person=new Person(role,update);
+
             if (messageText.startsWith(botPrefix)){
                 CommandParser.getCommandClass(messageText).req(person);
             }
@@ -62,7 +63,8 @@ public class TrackerBot extends TelegramLongPollingBot {
             String call_data = update.getCallbackQuery().getData();
             String  message_id = update.getCallbackQuery().getMessage().getMessageId().toString();
             String chat_id = update.getCallbackQuery().getMessage().getChatId().toString();
-            System.out.println(update.getCallbackQuery().getMessage());
+            System.out.println(update.getCallbackQuery().getMessage().getText());
+            System.out.println(update.getCallbackQuery().getMessage().getEntities());
 
             if (call_data.equals("update_msg_text")) {
                 String answer = "Updated message text";
@@ -70,6 +72,18 @@ public class TrackerBot extends TelegramLongPollingBot {
                 EditMessageText new_message = new EditMessageText();
                 new_message.setChatId(chat_id);
                 new_message.setMessageId(Integer.parseInt(message_id));
+                new_message.setText(answer);
+
+                SendUserMessageImpl.sendMessage(new_message);
+
+            }else
+            if (call_data.equals("update_end_task")) {
+                //String answer = "Registered task: ";
+
+                EditMessageText new_message = new EditMessageText();
+                new_message.setChatId(chat_id);
+                new_message.setMessageId(Integer.parseInt(message_id));
+                String answer = "Registered task: "+ update.getCallbackQuery().getMessage().getText();
                 new_message.setText(answer);
 
                 SendUserMessageImpl.sendMessage(new_message);

@@ -2,6 +2,7 @@ package router.services;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
+import java.util.HashMap;
 
 @WebService
 public interface NotificationService {
@@ -12,4 +13,7 @@ public interface NotificationService {
      */
     @WebMethod
     void sendNotification(String chatId,String message);
+
+    @WebMethod
+    public void sendNotification(HashMap<String, String> map);
 }
