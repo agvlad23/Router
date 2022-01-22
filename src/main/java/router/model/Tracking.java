@@ -24,7 +24,7 @@ public class Tracking {
     private String message;
 
 
-    private User user;
+
 
     public int getTrackingId() {
         return trackingId;
@@ -66,24 +66,17 @@ public class Tracking {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Tracking tracking = (Tracking) o;
-        return trackingId == tracking.trackingId && Objects.equals(date, tracking.date) && Objects.equals(startTime, tracking.startTime) && Objects.equals(endTime, tracking.endTime) && Objects.equals(message, tracking.message) && Objects.equals(user, tracking.user);
+        return trackingId == tracking.trackingId && Objects.equals(date, tracking.date) && Objects.equals(startTime, tracking.startTime) && Objects.equals(endTime, tracking.endTime) && Objects.equals(message, tracking.message) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(trackingId, date, startTime, endTime, message, user);
+        return Objects.hash(trackingId, date, startTime, endTime, message);
     }
 }
