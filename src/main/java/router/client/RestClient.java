@@ -1,14 +1,17 @@
 package router.client;
 
-import bot.model.User;
-import java.io.IOException;
+import com.sun.jersey.api.client.GenericType;
+import router.model.User;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
-import org.apache.http.client.ClientProtocolException;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
+
+import java.util.List;
 
 
 public class RestClient {
@@ -24,12 +27,12 @@ public class RestClient {
 
 
     }
-    public static User getUser(){
+    public static List<User> getUser(){
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
         WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8080/").build());
 
-        System.out.println(service. path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).get(String.class));
-        return null;
+        var k2=service.path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).get(new GenericType<List<User>>(){});
+        return k2;
     }
 }

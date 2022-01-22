@@ -1,13 +1,6 @@
-import bot.bot.TrackerBot;
-import bot.model.User;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import router.model.User;
 import router.client.RestClient;
-import router.services.NotificationServiceImpl;
-import router.services.ReportServiceImpl;
 
-import javax.xml.ws.Endpoint;
 import java.util.logging.Logger;
 
 public class Main {
