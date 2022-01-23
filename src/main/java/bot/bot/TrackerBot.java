@@ -3,6 +3,8 @@ package bot.bot;
 import bot.commands.CommandParser;
 import bot.model.Person;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import bot.roles.Role;
@@ -32,7 +34,9 @@ public class TrackerBot extends TelegramLongPollingBot {
         SendUserMessageImpl.init(this);
 
         Properties properties = new Properties();
-
+        var rootPath2=
+                Objects.requireNonNull(Thread.currentThread().getContextClassLoader())
+                        ;
         String rootPath=
                 Objects.requireNonNull(Thread.currentThread().getContextClassLoader()
                         .getResource("local.properties")).getPath();
@@ -88,7 +92,6 @@ public class TrackerBot extends TelegramLongPollingBot {
 
             }else
             if (call_data.equals("update_end_task")) {
-                //String answer = "Registered task: ";
 
                 EditMessageText new_message = new EditMessageText();
                 new_message.setChatId(chat_id);
@@ -116,6 +119,64 @@ public class TrackerBot extends TelegramLongPollingBot {
 
                 SendUserMessageImpl.sendMessage(new_message);
 
+
+            }else if(call_data.contains("_update_selected")){
+                var s=call_data.substring(0,call_data.indexOf("_update"));
+                int line=Integer.parseInt(s.split("_")[0]);
+                int row=Integer.parseInt(s.split("_")[1]);
+                var markup=update.getCallbackQuery().getMessage().getReplyMarkup();
+                var keyboard=markup.getKeyboard();
+                var text=keyboard.get(line).get(row).getText();
+                var lenght=text.length()-1;
+                var text2=text.split("✔");
+                if(text.charAt(lenght)=='✔')
+                    keyboard.get(line).get(row).setText(text.substring(0,lenght) + " ");
+                else
+                    keyboard.get(line).get(row).setText(text.substring(0,lenght+1) + "✔");
+
+                var editMessage= new EditMessageReplyMarkup();
+                editMessage.setChatId(chat_id);
+                editMessage.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                editMessage.setReplyMarkup(markup);
+
+                SendMessage gs=new SendMessage();
+                gs.setChatId(chat_id);
+                gs.setReplyMarkup(markup);
+                gs.setText("");
+                SendUserMessageImpl.sendMessage(editMessage);
+            }
+            else if (call_data.contains("_update_move")){
+
+                var s=call_data.substring(0,call_data.indexOf("_update"));
+               String group=s.split("_")[0];
+                String text2;
+                var markup=update.getCallbackQuery().getMessage().getReplyMarkup();
+                var keyboard=markup.getKeyboard();
+                for (int i=0;i<keyboard.size();i++){
+                    for (int j=0;j<keyboard.get(i).size();j++){
+                        var el=keyboard.get(i).get(j);
+                        if(el.getCallbackData().contains("update_selected")
+                                &&el.getText().charAt(el.getText().length()-1)=='✔'){
+                            text2=el.getText().substring(0,el.getText().lastIndexOf(" "));
+                            el.setText(text2+" "+group);
+
+                        }
+                    }
+                }
+
+
+
+
+                var editMessage= new EditMessageReplyMarkup();
+                editMessage.setChatId(chat_id);
+                editMessage.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                editMessage.setReplyMarkup(markup);
+
+                SendMessage gs=new SendMessage();
+                gs.setChatId(chat_id);
+                gs.setReplyMarkup(markup);
+                gs.setText(" asd");
+                SendUserMessageImpl.sendMessage(editMessage);
 
             }
         }

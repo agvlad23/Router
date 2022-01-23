@@ -10,7 +10,7 @@ public class User {
 
         private String name;
 
-
+        private String group="none";
         private List<Tracking> tracking;
 
         public User(String userId) {
@@ -43,4 +43,12 @@ public class User {
         public void setTracking(List<Tracking> tracking) {
             this.tracking = tracking;
         }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
 }

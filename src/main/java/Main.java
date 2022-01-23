@@ -33,7 +33,7 @@ public class Main {
        Thread t= new Thread(){
             public void run(){
         try {
-            Thread.sleep(2222);
+            Thread.sleep(2);
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new TrackerBot());
         } catch (TelegramApiException | InterruptedException e) {

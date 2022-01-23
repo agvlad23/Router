@@ -53,6 +53,8 @@ public class CommandParser {
                 return new HelpCommand();
             case "list":
                 return new UserListCommand();
+            case "in":
+                return new InterfaceCommand();
             default: return new HelpCommand();
         }
     }
