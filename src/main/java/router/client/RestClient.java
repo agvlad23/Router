@@ -1,5 +1,6 @@
 package router.client;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import router.model.User;
 
@@ -18,12 +19,12 @@ public class RestClient {
     public static void addUser(User user){
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);
-        WebResource service = client.resource(UriBuilder.fromUri("http://restUrl").build());
+        WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8080/").build());
 
-/*        System.out.println(service. path("restPath").path("resourcePath").accept(MediaType.APPLICATION_JSON).get(String.class));
-        ClientResponse response = webResource.path("restPath").path("resourcePath").
+        //System.out.println(service. path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).get(String.class));
+        ClientResponse response = service.path("Rest_Service_war_exploded").path("user").
                 type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, user);
-        System.out.println("Response " + response.getEntity(String.class));*/
+        System.out.println("Response " + response.getEntity(String.class));
 
 
     }

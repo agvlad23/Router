@@ -8,9 +8,15 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import bot.roles.Role;
 import bot.services.SendUserMessageImpl;
 import router.client.Client;
+import router.client.RestClient;
+import router.model.Tracking;
+import router.model.User;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
@@ -90,6 +96,23 @@ public class TrackerBot extends TelegramLongPollingBot {
                 String answer = "Registered task: "+ update.getCallbackQuery().getMessage().getText();
                 new_message.setText(answer);
                 System.out.println(new Date(update.getCallbackQuery().getMessage().getDate()*1000L));
+                var temp=update.getCallbackQuery().getMessage().getDate()*1000L;
+                Date time=new Date(temp);
+
+
+                var user=new User();
+                user.setUserId(update.getCallbackQuery().getFrom().getUserName());
+                user.setName(update.getCallbackQuery().getFrom().getFirstName());
+                Tracking t= new Tracking();
+                t.setDate(new java.sql.Date(temp));
+                t.setStartTime(new Time(time.getTime()));
+                t.setEndTime(new Time(System.currentTimeMillis()));
+                t.setMessage(update.getCallbackQuery().getMessage().getText());
+                var tt= new ArrayList<Tracking>();
+                tt.add(t);
+                user.setTracking(tt);
+
+                RestClient.addUser(user);
 
                 SendUserMessageImpl.sendMessage(new_message);
 
