@@ -26,7 +26,6 @@ public class RestClient {
                 type(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON).post(ClientResponse.class, user);
         System.out.println("Response " + response.getEntity(String.class));
 
-
     }
     public static List<User> getUser(){
         ClientConfig config = new DefaultClientConfig();
@@ -35,5 +34,14 @@ public class RestClient {
 
         var k2=service.path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).get(new GenericType<List<User>>(){});
         return k2;
+    }
+
+    public static void deleteUser(String telegramId){
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8080/").build());
+
+        service.path("Rest_Service_war_exploded").path("user").accept(MediaType.APPLICATION_JSON).delete(telegramId);
+
     }
 }

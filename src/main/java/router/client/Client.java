@@ -59,6 +59,7 @@ public class Client {
         UserServiceImplService userService = new UserServiceImplService();
         UserService usServ =userService.getUserServiceImplPort();
         usServ.deleteUserByTelegramId(telegramUserId);
+        RestClient.deleteUser(telegramUserId);
 
     }
     public static void deleteUser(List<String> telegramUserIds){
@@ -67,6 +68,7 @@ public class Client {
         for (var s:telegramUserIds
              ) {
             usServ.deleteUserByTelegramId(s);
+            RestClient.deleteUser(s);
         }
     }
     public static void setRole(List<String> telegramUserIds,RoleEnum role){
