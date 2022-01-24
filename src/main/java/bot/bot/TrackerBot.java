@@ -11,6 +11,8 @@ import bot.roles.Role;
 import bot.services.SendUserMessageImpl;
 import router.client.Client;
 import router.client.RestClient;
+import router.client.SoapClient;
+import router.client.generated.RoleEnum;
 import router.model.Tracking;
 import router.model.User;
 
@@ -18,10 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 import static org.glassfish.grizzly.http.util.Header.Date;
 
@@ -61,12 +60,16 @@ public class TrackerBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
 
+        if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
-            var role= Client.getRole(update.getMessage().getChat().getUserName());
-            var person=new Person(role,update);
+            String telegramID = update.getMessage().getChat().getUserName();
+            var user=Client.getUser(telegramID);
+            Person person;
+            if (user!=null)
+                person=new Person(user,update,Role.toRole(user.getUserRole()));
+            else  person=new Person(user,update,Role.USER);
 
             if (messageText.startsWith(botPrefix)){
                 CommandParser.getCommandClass(messageText).req(person);
@@ -103,9 +106,9 @@ public class TrackerBot extends TelegramLongPollingBot {
                 Date time=new Date(temp);
 
 
-                var user=new User();
-                user.setUserId(update.getCallbackQuery().getFrom().getUserName());
-                user.setName(update.getCallbackQuery().getFrom().getFirstName());
+                var userTracker=new User();
+                userTracker.setUserId(update.getCallbackQuery().getFrom().getUserName());
+                userTracker.setName(update.getCallbackQuery().getFrom().getFirstName());
                 Tracking t= new Tracking();
                 t.setDate(new java.sql.Date(temp));
                 t.setStartTime(new Time(time.getTime()));
@@ -113,9 +116,9 @@ public class TrackerBot extends TelegramLongPollingBot {
                 t.setMessage(update.getCallbackQuery().getMessage().getText());
                 var tt= new ArrayList<Tracking>();
                 tt.add(t);
-                user.setTracking(tt);
+                userTracker.setTracking(tt);
 
-                RestClient.addUser(user);
+                RestClient.addUser(userTracker);
 
                 SendUserMessageImpl.sendMessage(new_message);
 
@@ -152,11 +155,14 @@ public class TrackerBot extends TelegramLongPollingBot {
                 String text2;
                 var markup=update.getCallbackQuery().getMessage().getReplyMarkup();
                 var keyboard=markup.getKeyboard();
+                List<String> telegramId=new ArrayList<>();
                 for (int i=0;i<keyboard.size();i++){
                     for (int j=0;j<keyboard.get(i).size();j++){
                         var el=keyboard.get(i).get(j);
                         if(el.getCallbackData().contains("update_selected")
                                 &&el.getText().charAt(el.getText().length()-1)=='✔'){
+                            var telegramID_s=el.getCallbackData().split("telegramID_");
+                            telegramId.add(telegramID_s[telegramID_s.length-1]);
                             text2=el.getText().substring(0,el.getText().lastIndexOf(" "));
                             el.setText(text2+" "+group);
 
@@ -164,8 +170,101 @@ public class TrackerBot extends TelegramLongPollingBot {
                     }
                 }
 
+                Client.setGroup(telegramId,group);
+
+                var editMessage= new EditMessageReplyMarkup();
+                editMessage.setChatId(chat_id);
+                editMessage.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                editMessage.setReplyMarkup(markup);
+
+                SendMessage gs=new SendMessage();
+                gs.setChatId(chat_id);
+                gs.setReplyMarkup(markup);
+                gs.setText(" asd");
+                SendUserMessageImpl.sendMessage(editMessage);
+
+            }else if(call_data.equals("update_delete_selected")){
 
 
+                var markup=update.getCallbackQuery().getMessage().getReplyMarkup();
+                var keyboard=markup.getKeyboard();
+
+                List<String> telegramIdToDelete=new ArrayList<>();
+                for (int i=0;i<keyboard.size();i++){
+                    for (int j=0;j<keyboard.get(i).size();j++){
+                        var el=keyboard.get(i).get(j);
+                        if(el.getCallbackData().contains("update_selected")
+                                &&el.getText().charAt(el.getText().length()-1)=='✔'){
+                            var telegramID_s=el.getCallbackData().split("telegramID_");
+                            telegramIdToDelete.add(telegramID_s[telegramID_s.length-1]);
+                            keyboard.get(i).remove(j);
+                        }
+                    }
+                }
+                Client.deleteUser(telegramIdToDelete);
+
+                var editMessage= new EditMessageReplyMarkup();
+                editMessage.setChatId(chat_id);
+                editMessage.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                editMessage.setReplyMarkup(markup);
+
+                SendMessage gs=new SendMessage();
+                gs.setChatId(chat_id);
+                gs.setReplyMarkup(markup);
+                gs.setText(" asd");
+                SendUserMessageImpl.sendMessage(editMessage);
+            }else if(call_data.equals("update_deleteGroup_selected")){
+
+                var markup=update.getCallbackQuery().getMessage().getReplyMarkup();
+                var keyboard=markup.getKeyboard();
+
+                List<String> groupNameToDelete=new ArrayList<>();
+                for (int i=0;i<keyboard.size();i++){
+                    for (int j=0;j<keyboard.get(i).size();j++){
+                        var el=keyboard.get(i).get(j);
+                        if(el.getCallbackData().contains("update_selected")
+                                &&el.getText().charAt(el.getText().length()-1)=='✔'){
+                            var groupName_s=el.getCallbackData().split("groupName_");
+                            groupNameToDelete.add(groupName_s[groupName_s.length-1]);
+                            keyboard.get(i).remove(j);
+                        }
+                    }
+                }
+                Client.deleteGroup(groupNameToDelete);
+
+                var editMessage= new EditMessageReplyMarkup();
+                editMessage.setChatId(chat_id);
+                editMessage.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
+                editMessage.setReplyMarkup(markup);
+
+                SendMessage gs=new SendMessage();
+                gs.setChatId(chat_id);
+                gs.setReplyMarkup(markup);
+                gs.setText(" asd");
+                SendUserMessageImpl.sendMessage(editMessage);
+            }
+            else if (call_data.contains("|update_role_selected")){
+
+                var markup=update.getCallbackQuery().getMessage().getReplyMarkup();
+                var keyboard=markup.getKeyboard();
+
+                String roleString=call_data.substring(0,call_data.indexOf('|'));
+                List<String> telegramIdToSetRole=new ArrayList<>();
+
+                for (int i=0;i<keyboard.size();i++){
+                    for (int j=0;j<keyboard.get(i).size();j++){
+                        var el=keyboard.get(i).get(j);
+                        if(el.getCallbackData().contains("update_selected")
+                                &&el.getText().charAt(el.getText().length()-1)=='✔'){
+                            var telegramID_s=el.getCallbackData().split("telegramID_");
+                            telegramIdToSetRole.add(telegramID_s[telegramID_s.length-1]);
+                            el.setText(el.getText().substring(0,el.getText().length()-1));
+
+                        }
+                    }
+                }
+
+                Client.setRole(telegramIdToSetRole, RoleEnum.valueOf(roleString));
 
                 var editMessage= new EditMessageReplyMarkup();
                 editMessage.setChatId(chat_id);
@@ -179,6 +278,8 @@ public class TrackerBot extends TelegramLongPollingBot {
                 SendUserMessageImpl.sendMessage(editMessage);
 
             }
+
+
         }
 
     }

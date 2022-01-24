@@ -11,10 +11,10 @@ public enum CommandName {
 
         switch (s.split("\\s")[0]) {
             case "/start":
-                return new StartCommand();
+                return new StartTaskCommand();
             case "/stop":
                 return new StopCommand();
-            default: return new StartCommand();
+            default: return new StartTaskCommand();
         }
     }
 }

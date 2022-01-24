@@ -42,7 +42,6 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -52,6 +51,7 @@
                 <configuration>
                     <wsdlUrls>
                         <wsdlUrl>http://localhost:8090/teamservice/user/?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:8090/teamservice/usergroup/?wsdl</wsdlUrl>
 
                     </wsdlUrls>
                     <keep>true</keep>
@@ -61,4 +61,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

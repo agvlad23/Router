@@ -1,37 +1,30 @@
 package bot.commands;
 
 import bot.model.Person;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import bot.services.SendUserMessageImpl;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import router.client.Client;
+import router.client.generated.RoleEnum;
+import router.client.generated.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class StartCommand implements Command{
+public class StartCommand implements Command {
     @Override
     public void req(Person p) {
-        var update =p.getUpdate();
-        System.out.println("startCommand");
-        var inMessage=update.getMessage();
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        var keyboar =new InlineKeyboardButton();
-        keyboar.setText("End Task");
-        keyboar.setCallbackData("update_end_task");
-        rowInline.add(keyboar);
-        rowsInline.add(rowInline);
-        markupInline.setKeyboard(rowsInline);
-        SendMessage outMessage=new SendMessage(inMessage.getChatId().toString(),inMessage.getText()+" startCommand");
+        if (p.getUser()==null){
+            User user=new User();
+            var update=p.getUpdate();
 
-        outMessage.enableHtml(true);
-        outMessage.setReplyMarkup(markupInline);
-        outMessage.setText("<b><i> "+inMessage.getText().substring(inMessage.getText().indexOf(' '))+" </i></b>");
+            String name="";
+            if (update.getMessage().getChat().getFirstName()!=null)
+                name+=update.getMessage().getChat().getFirstName();
+            if (update.getMessage().getChat().getLastName()!=null)
+                name+=" "+update.getMessage().getChat().getLastName();
+            user.setTelegramUserId(update.getMessage().getChat().getUserName());
+            user.setUsername(name);
+            user.setTelegramChatId(update.getMessage().getChatId().toString());
+            user.setUserRole(RoleEnum.USER);
+            p.setUser(user);
+            Client.addUser(user);
+        }
+        new HelpCommand().req(p);
 
-
-        SendUserMessageImpl.sendMessage(outMessage);
     }
 }

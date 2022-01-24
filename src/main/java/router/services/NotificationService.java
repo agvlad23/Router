@@ -8,11 +8,11 @@ import java.util.HashMap;
 public interface NotificationService {
 
     /**
-     * @param chatId Chat id to determine to what chat send message
+     * @param userId Chat id to determine to what chat send message
      * @param message message
      */
     @WebMethod
-    void sendNotification(String chatId,String message);
+    void sendNotification(String userId,String message);
 
     @WebMethod
     public void sendNotification(HashMap<String, String> map);

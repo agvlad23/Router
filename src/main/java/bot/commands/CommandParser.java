@@ -1,9 +1,4 @@
 package bot.commands;
-import bot.bot.TrackerBot;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 public class CommandParser {
    /* String chatId;
@@ -42,9 +37,11 @@ public class CommandParser {
 
 
     public static Command getCommandClass(String commandName){
-        var k=StartCommand.class;
+        var k= StartTaskCommand.class;
 
         switch (commandName.split("\\s")[0].substring(1).toLowerCase()) {
+            case "task":
+                return new StartTaskCommand();
             case "start":
                 return new StartCommand();
             case "stop":
@@ -53,8 +50,12 @@ public class CommandParser {
                 return new HelpCommand();
             case "list":
                 return new UserListCommand();
-            case "in":
+            case "updu":
                 return new InterfaceCommand();
+            case "updg":
+                return new GroupEditCommand();
+            case "addg":
+                return new AddGroupCommand();
             default: return new HelpCommand();
         }
     }

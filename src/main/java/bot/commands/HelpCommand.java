@@ -17,41 +17,17 @@ public class HelpCommand implements Command{
         System.out.println("helpCommand");
 
 
-
-        var inMessage=update.getMessage();
-
-        SendMessage outMessage=new SendMessage(inMessage.getChatId().toString(),inMessage.getText()+" helpCommand");
-
-        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        var keyboar =new InlineKeyboardButton();
-        keyboar.setText("Update message text");
-        keyboar.setCallbackData("update_msg_text");
-        rowInline.add(keyboar);
-
-        keyboar =new InlineKeyboardButton();
-        keyboar.setText("second button");
-        keyboar.setCallbackData("update_msg_text");
-        rowInline.add(keyboar);
-        keyboar =new InlineKeyboardButton();
-        keyboar.setText("<b>bold text</b>");
-        keyboar.setCallbackData("update_msg_text");
-        rowInline.add(keyboar);
-        keyboar =new InlineKeyboardButton();
-        keyboar.setText("_italic text_");
-        keyboar.setCallbackData("update_msg_text");
-        rowInline.add(keyboar);
-        rowsInline.add(rowInline);
-        rowsInline.add(rowInline);
-
-        markupInline.setKeyboard(rowsInline);
+        var k = new SendMessage();
+        k.enableHtml(true);
+        k.setChatId(p.getUpdate().getMessage().getChatId().toString());
+        k.setText(
+                "<b><i> /help </i></b> command to see this message\n" +
+                "<b><i> /start </i></b> command to register\n" +
+                "<b><i> /list </i></b> command to get list of students\n" +
+                "<b><i> /updu </i></b> command to update user role and user groups\n" +
+                "<b><i> /updg </i></b> command to update groups\n");
+        SendUserMessageImpl.sendMessage(k);
 
 
-        outMessage.enableHtml(true);
-        outMessage.setReplyMarkup(markupInline);
-        outMessage.setText("<b><i> "+inMessage.getText()+" helpCommand </i></b>");
-
-        SendUserMessageImpl.sendMessage(outMessage);
     }
 }

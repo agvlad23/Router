@@ -9,12 +9,14 @@ import java.util.Map;
 public interface ReportService {
 
     /**
-     * @param chatId Chat id to determine to what chat send message
+     * @param userId Chat id to determine to what chat send message
      * @param message message
      */
     @WebMethod
-    void sendReport(String chatId,String message);
+    void sendReport(String userId,String message);
 
     @WebMethod
     void sendReport(HashMap<String,String> map);
+
+
 }
