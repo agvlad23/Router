@@ -76,6 +76,16 @@ public class Tracking {
     }
 
     @Override
+    public String toString() {
+        return "Tracking{" +
+                "date=" + date +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", message='" + message + '\'' +
+                "}\n";
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(trackingId, date, startTime, endTime, message);
     }

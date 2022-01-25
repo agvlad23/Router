@@ -36,6 +36,22 @@ public class RestClient {
         return k2;
     }
 
+    public static List<User> getLatestTracking(){
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8080/").build());
+
+        var k2=service.path("Rest_Service_war_exploded").path("latest").accept(MediaType.APPLICATION_JSON).get(new GenericType<List<User>>(){});
+        return k2;
+    }
+    public static User getUser(String telegramId){
+        ClientConfig config = new DefaultClientConfig();
+        Client client = Client.create(config);
+        WebResource service = client.resource(UriBuilder.fromUri("http://localhost:8080/").build());
+
+        var k2=service.path("Rest_Service_war_exploded").path("user/"+telegramId).accept(MediaType.APPLICATION_JSON).get(User.class);
+        return k2;
+    }
     public static void deleteUser(String telegramId){
         ClientConfig config = new DefaultClientConfig();
         Client client = Client.create(config);

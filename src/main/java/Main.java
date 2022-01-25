@@ -28,7 +28,8 @@ public class Main {
         tt.add(t);
         user.setTracking(tt);
         RestClient.addUser(user);*/
-      //  var k=RestClient.getUser();
+/*        var k=RestClient.getUser();
+        System.out.println(k.toString());*/
        // RestClient.addUser(user);
        Thread t= new Thread(){
             public void run(){

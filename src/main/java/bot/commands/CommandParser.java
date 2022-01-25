@@ -44,6 +44,8 @@ public class CommandParser {
                 return new StartTaskCommand();
             case "start":
                 return new StartCommand();
+            case "tracking":
+                return new TrackingListCommand();
             case "stop":
                 return new StopCommand();
             case "help":

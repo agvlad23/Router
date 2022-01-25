@@ -23,9 +23,12 @@ public class HelpCommand implements Command{
         k.setText(
                 "<b><i> /help </i></b> command to see this message\n" +
                 "<b><i> /start </i></b> command to register\n" +
+                "<b><i> /task </i></b> command to start task\n" +
                 "<b><i> /list </i></b> command to get list of students\n" +
                 "<b><i> /updu </i></b> command to update user role and user groups\n" +
-                "<b><i> /updg </i></b> command to update groups\n");
+                "<b><i> /updg </i></b> command to update groups\n"+
+                "<b><i> /addg </i></b> command to add groups\n"+
+                "<b><i> /tracking </i></b> command to see all tracking for today\n");
         SendUserMessageImpl.sendMessage(k);
 
 

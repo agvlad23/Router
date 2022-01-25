@@ -14,10 +14,21 @@ import java.util.List;
 public class UserListCommand implements Command{
     @Override
     public void req(Person p) {
-        if (p.getRole()== Role.USER){
+        if (p.getRole()== Role.USER||p.getRole()==Role.TEAM_LEAD){
             var k=new SendMessage();
             k.setChatId(p.getUpdate().getMessage().getChatId().toString());
-            k.setText("You are not allowed to see list of users");
+            if(p.getUser().getUserGroup()==null)
+                k.setText("You are not allowed to see list of users");
+            else {
+                StringBuilder s= new StringBuilder();
+                var tempUsers=Client.getUsersFromGroup(p.getUser().getUserGroup().getGroupName());
+                for (var el:tempUsers
+                     ) {
+                    s.append(el.getUsername()).append(" ").append(el.getUserRole()).append("\n");
+                }
+                k.setText(s.toString());
+
+            }
             SendUserMessageImpl.sendMessage(k);
         }else{
             var inMessage = p.getUpdate().getMessage();

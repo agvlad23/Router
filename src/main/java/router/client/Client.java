@@ -30,11 +30,11 @@ public class Client {
 
     }
 
-    public static ArrayList<User> getUsers(){
+    public static ArrayList<User> getUsersFromGroup(String group){
         UserServiceImplService userService = new UserServiceImplService();
         UserService usServ =userService.getUserServiceImplPort();
 
-        var user = new ArrayList<>(usServ.findAllUsers());
+        var user = new ArrayList<>(usServ.findAllUsersFromGroup(group));
         System.out.println(user);
         return user;
     }

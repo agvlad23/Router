@@ -26,7 +26,7 @@ public class InterfaceCommand implements Command {
             List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
             List<InlineKeyboardButton> rowInline = new ArrayList<>();
 
-            List<User> userList = Client.getUsers();//new ArrayList<>();
+            List<User> userList = Client.getAllUsers();//new ArrayList<>();
 
 
 /*        for (int i=0;i<33;i++) {
